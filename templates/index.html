@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Vincent van Gogh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            width: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #chatbox {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+        }
+        .chat-message strong {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .user-message {
+            text-align: right;
+            color: #4a90e2;
+        }
+        .vincent-message {
+            text-align: left;
+            color: #333;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        #sendButton:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Talk to Vincent van Gogh</div>
+        <div id="chatbox"></div>
+        <div class="chat-input-container">
+            <input type="text" id="userInput" placeholder="Ask Vincent a question...">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) return;  // Skip if input is empty
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+
+            // Append user and Vincent's messages to the chatbox
+            document.getElementById("chatbox").innerHTML += `
+                <div class="chat-message user-message"><strong>You:</strong> ${userInput}</div>
+            `;
+            document.getElementById("chatbox").innerHTML += `
+                <div class="chat-message vincent-message"><strong>Vincent:</strong> ${data.response}</div>
+            `;
+
+            document.getElementById("userInput").value = "";  // Clear the input field
+            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;  // Scroll to the bottom
+        }
+    </script>
+</body>
+</html>
