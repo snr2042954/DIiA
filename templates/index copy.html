@@ -12,55 +12,16 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #000;
         }
-        .container {
-            display: flex;
-            width: 80%;
-            max-width: 1200px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+        .chat-module {
+            width: 400px;
+            background-color: #2d3142;
+            border-radius: 15px;
             overflow: hidden;
-        }
-        .left-panel, .right-panel {
-            flex: 1;
-            padding: 20px;
-        }
-        .left-panel {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #f9f9f9;
-        }
-        .left-panel img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .left-panel input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 1em;
-        }
-        .left-panel button {
-            padding: 10px 20px;
-            background-color: #4a90e2;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .left-panel button:hover {
-            background-color: #357ABD;
-        }
-        .chat-container {
-            width: 100%;
         }
         .chat-header {
             background-color: #4a90e2;
@@ -69,12 +30,14 @@
             text-align: center;
             font-size: 1.5em;
             font-weight: bold;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
         #chatbox {
             padding: 20px;
             height: 300px;
             overflow-y: auto;
-            border-bottom: 1px solid #ddd;
+            background-color: #f9f9f9;
             color: #333;
         }
         .chat-message {
@@ -95,7 +58,9 @@
         .chat-input-container {
             display: flex;
             padding: 15px;
-            background-color: #f9f9f9;
+            background-color: #e3f7d0;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
         }
         #userInput {
             flex: 1;
@@ -120,21 +85,12 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="left-panel">
-            <img src="path/to/your/image.jpg" alt="Vincent van Gogh">
-            <input type="text" id="leftUserInput" placeholder="Leave a message...">
-            <button id="leftSendButton">Send</button>
-        </div>
-        <div class="right-panel">
-            <div class="chat-container">
-                <div class="chat-header">Talk to Vincent van Gogh</div>
-                <div id="chatbox"></div>
-                <div class="chat-input-container">
-                    <input type="text" id="userInput" placeholder="Ask Vincent a question...">
-                    <button id="sendButton" onclick="sendMessage()">Send</button>
-                </div>
-            </div>
+    <div class="chat-module">
+        <div class="chat-header">Talk to Vincent van Gogh</div>
+        <div id="chatbox"></div>
+        <div class="chat-input-container">
+            <input type="text" id="userInput" placeholder="Ask Vincent a question...">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
@@ -143,19 +99,15 @@
             const userInput = document.getElementById("userInput").value;
             if (!userInput.trim()) return;  // Skip if input is empty
 
-            const response = await fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userInput })
-            });
-            const data = await response.json();
+            // Mock response for demo purposes (remove this when implementing actual API call)
+            const response = { response: "I'm glad to talk to you. Let's discuss art!" };
 
             // Append user and Vincent's messages to the chatbox
             document.getElementById("chatbox").innerHTML += `
                 <div class="chat-message user-message"><strong>You:</strong> ${userInput}</div>
             `;
             document.getElementById("chatbox").innerHTML += `
-                <div class="chat-message vincent-message"><strong>Vincent:</strong> ${data.response}</div>
+                <div class="chat-message vincent-message"><strong>Vincent:</strong> ${response.response}</div>
             `;
 
             document.getElementById("userInput").value = "";  // Clear the input field
@@ -163,4 +115,4 @@
         }
     </script>
 </body>
-</html></div>
+</html>

@@ -1,125 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with Vincent van Gogh</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .module {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 75%;
-            max-width: 1200px;
-            background-color: #e0701f;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px;
-        }
-        .chat-container {
-            width: 400px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .chat-header {
-            background-color: #4a90e2;
-            color: #fff;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        #chatbox {
-            padding: 20px;
-            height: 300px;
-            overflow-y: auto;
-            border-bottom: 1px solid #ddd;
-            color: #333;
-        }
-        .chat-message {
-            margin-bottom: 15px;
-        }
-        .chat-message strong {
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-        .user-message {
-            text-align: right;
-            color: #4a90e2;
-        }
-        .vincent-message {
-            text-align: left;
-            color: #333;
-        }
-        .chat-input-container {
-            display: flex;
-            padding: 15px;
-            background-color: #f9f9f9;
-        }
-        #userInput {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-right: 10px;
-            font-size: 1em;
-        }
-        #sendButton {
-            padding: 10px 20px;
-            background-color: #4a90e2;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        #sendButton:hover {
-            background-color: #357ABD;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Layout with Modals</title>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #000;
+    }
+    .container {
+        display: flex;
+        gap: 10px;
+        padding: 20px;
+        border-radius: 15px;
+        background-color: #000;
+    }
+    .card {
+        width: 200px;
+        border-radius: 15px;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+    }
+    .card img {
+        width: 100%;
+        border-radius: 10px;
+    }
+    .title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    .progress-circle {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .progress-circle span {
+        position: absolute;
+        font-size: 0.9em;
+    }
+    .progress-circle:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 6px solid #ddd;
+        border-top-color: #333;
+        transform: rotate(0deg);
+        transition: transform 0.5s ease;
+    }
+    .card-1 .progress-circle:before { transform: rotate(144deg); /* 40% */ }
+    .card-2 .progress-circle:before { transform: rotate(36deg); /* 10% */ }
+
+    /* Card Colors */
+    .card-1 { background-color: #f9c5c1; }
+    .card-2 { background-color: #e3f7d0; }
+    .card-3 {
+        background-color: #2d3142;
+        color: #9a9a9a;
+        filter: grayscale(100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    /* Locked Icon */
+    .locked-icon {
+        font-size: 40px;
+        margin-top: 10px;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+    }
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
-    <div class="module" onclick="startModule(1)" style="cursor: pointer;">
-        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
-        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
-            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
+
+<div class="container">
+    <!-- Card 1 -->
+    <div class="card card-1" onclick="openModal('modal1')">
+        <img src="https://via.placeholder.com/150x100" alt="Young Vincent">
+        <div class="title">Young Vincent</div>
+        <div class="progress-circle">
+            <span>40%</span>
         </div>
-        <p>50%</p>
-       </div>
     </div>
-    <div class="module" onclick="startModule(2)" style="cursor: pointer;">
-        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
-        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
-            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
+
+    <!-- Card 2 -->
+    <div class="card card-2" onclick="openModal('modal2')">
+        <img src="https://via.placeholder.com/150x100" alt="Looking for a direction">
+        <div class="title">Looking for a direction</div>
+        <div class="progress-circle">
+            <span>10%</span>
         </div>
-        <p>50%</p>
-       </div>
     </div>
-    <div class="module" onclick="startModule(3)" style="cursor: pointer;">
-        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
-        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
-            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
-        </div>
-        <p>50%</p>
-       </div>
-    </div>  
+
+    <!-- Card 3 (Locked) -->
+    <div class="card card-3" onclick="openModal('modal3')">
+        <div class="title">First steps as an artist</div>
+        <div class="locked-icon">🔒</div>
+    </div>
+</div>
+
+<!-- Modal for Card 1 -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal1')">&times;</span>
+        <h2>Young Vincent</h2>
+        <p>This is the description for Young Vincent.</p>
+    </div>
+</div>
+
+<!-- Modal for Card 2 -->
+<div id="modal2" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal2')">&times;</span>
+        <h2>Looking for a direction</h2>
+        <p>This is the description for Looking for a direction.</p>
+    </div>
+</div>
+
+<!-- Modal for Card 3 -->
+<div id="modal3" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal3')">&times;</span>
+        <h2>First steps as an artist</h2>
+        <p>This card is locked. Unlock it to see more details.</p>
+    </div>
+</div>
 
 <script>
-    function startModule(moduleNumber) {
-        alert('Starting Module ' + moduleNumber);
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Close modal when clicking outside modal content
+    window.onclick = function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
     }
 </script>
+
 </body>
 </html>
