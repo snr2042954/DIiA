@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, render_template
-import os
 from time import sleep
 from openai import OpenAI
 
@@ -19,7 +18,7 @@ uploaded_file = client.files.create(
     purpose='assistants'
 )
 
-# Create the assistant with the desired instructions and tools
+# Step 2: Create the assistant with the desired instructions and tools
 # Implement https://platform.openai.com/docs/assistants/tools/file-search
 assistant = client.beta.assistants.create(
     name="Vincent van Gogh",
@@ -29,61 +28,64 @@ assistant = client.beta.assistants.create(
 )
 
 # Step 3: Create a new conversation thread
-# It's good practice to create a new thread per user interaction session.
 thread = client.beta.threads.create()
 
+# Step 4: Outline the html template
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
+# Step 5: Implement POST Method
 @app.route('/chat', methods=['POST'])
 def chat():
+
+    # Step 5.1: Retrieve the message
     user_message = request.json.get('message')
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
-    # Step 4: Add the user message to the thread
-    message = client.beta.threads.messages.create(
+    # Step 5.2: Add the user message to the thread
+    client.beta.threads.messages.create(
         thread_id=thread.id,
         role="user",
         content=user_message,
     )
 
-    # Step 5: Run the Assistant on the thread
+    # Step 5.3: Run the Assistant on the thread
     run = client.beta.threads.runs.create(
         thread_id=thread.id,
         assistant_id=assistant.id,
         instructions=personality
     )
 
-    # Step 6: Poll until the run is complete
+    # Step 5.4: Poll until the run is complete
     while run.status != "completed":
+        print(f"run status: {run.status}")
         sleep(1)
 
         run = client.beta.threads.runs.retrieve(
             thread_id=thread.id,
             run_id=run.id
         )
+        print(f"run status: {run.status}")
 
-    # Step 7: Retrieve the assistant's response messages
+    # Step 5.5: Retrieve the assistant's messages
     messages = client.beta.threads.messages.list(thread_id=thread.id)
 
-    # Extract the assistant's reply from the messages
+    # Step 5.6: Extract the assistant's reply from the messages
     reply = ["No response found."]
     for msg in messages:
         if msg.role == 'assistant' and msg.content:
             # Assuming msg.content is a list of TextContentBlock objects
             reply.append(msg.content[0].text.value)  # Extract the value from the response
 
-    # Return the assistant's reply as a JSON response
-    return jsonify({"response": reply[1]})
+    # Step 5.7: Format the assistant's reply as a JSON response
+    output = jsonify({"response": reply[1]})
+
+    return output
 
 
-@app.route('/test')
-def test():
-    return "Flask is working!"
-
-
+# Step 6: Run if __main__
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5001)
