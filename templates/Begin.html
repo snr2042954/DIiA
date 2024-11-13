@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Vincent van Gogh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .module {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 75%;
+            max-width: 1200px;
+            background-color: #e0701f;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px;
+        }
+        .chat-container {
+            width: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #chatbox {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+        }
+        .chat-message strong {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .user-message {
+            text-align: right;
+            color: #4a90e2;
+        }
+        .vincent-message {
+            text-align: left;
+            color: #333;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        #sendButton:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <div class="module" onclick="startModule(1)" style="cursor: pointer;">
+        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
+        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
+            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
+        </div>
+        <p>50%</p>
+       </div>
+    </div>
+    <div class="module" onclick="startModule(2)" style="cursor: pointer;">
+        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
+        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
+            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
+        </div>
+        <p>50%</p>
+       </div>
+    </div>
+    <div class="module" onclick="startModule(3)" style="cursor: pointer;">
+        <img src="Images/download.jpeg" alt="Module 1 Image" style="width:100%; height:80%;">  
+        <div class="progress-bar" style="width: 100%; background-color: #ddd;height: 20px;">
+            <div style="width: 50%; height: 600px; height: 20px; background-color: #4a90e2;"></div>
+        </div>
+        <p>50%</p>
+       </div>
+    </div>  
+
+<script>
+    function startModule(moduleNumber) {
+        alert('Starting Module ' + moduleNumber);
+    }
+</script>
+</body>
+</html>
