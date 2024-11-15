@@ -19,18 +19,21 @@
     }
     .container {
         display: flex;
-        gap: 10px;
+        gap: 20px;
         padding: 20px;
         border-radius: 15px;
         background-color: #000;
+        overflow-x: auto; /* Add horizontal scroll */
+        max-width: 90vw; /* Constrain width for scrollability */
+        max-height: 90vh; /* Constrain height for scrollability */
     }
     .card {
-        width: 200px;
+        width: 300px; /* Increase width */
+        padding: 30px; /* Increase padding for larger feel */
         border-radius: 15px;
         overflow: hidden;
         text-align: center;
         position: relative;
-        padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -41,14 +44,14 @@
         border-radius: 10px;
     }
     .title {
-        font-size: 1.2em;
+        font-size: 1.4em; /* Increase font size */
         font-weight: bold;
-        margin: 10px 0;
+        margin: 15px 0;
     }
     .progress-circle {
         position: relative;
-        width: 50px;
-        height: 50px;
+        width: 60px; /* Increase size */
+        height: 60px;
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -58,7 +61,7 @@
     }
     .progress-circle span {
         position: absolute;
-        font-size: 0.9em;
+        font-size: 1em;
     }
     .progress-circle:before {
         content: '';
@@ -121,6 +124,74 @@
         color: #333;
         cursor: pointer;
     }
+    .chat-module {
+            width: 400px;
+            background-color: #2d3142;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        #chatbox {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+        }
+        .chat-message strong {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .user-message {
+            text-align: right;
+            color: #4a90e2;
+        }
+        .vincent-message {
+            text-align: left;
+            color: #333;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #e3f7d0;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        #sendButton:hover {
+            background-color: #357ABD;
+        }
 </style>
 </head>
 <body>
@@ -128,7 +199,7 @@
 <div class="container">
     <!-- Card 1 -->
     <div class="card card-1" onclick="openModal('modal1')">
-        <img src="https://via.placeholder.com/150x100" alt="Young Vincent">
+        <img src="https://www.vangoghmuseum.nl/assets/c39f7f73-aa21-4fbf-a446-c6e7b2deda0d?w=2000&format=webp&c=5ed8b2f4ddeef9ec19b3b56655a1de4161c74fee41019f66f3c9f39874c42ef7" alt="Young Vincent">
         <div class="title">Young Vincent</div>
         <div class="progress-circle">
             <span>40%</span>
@@ -153,10 +224,13 @@
 
 <!-- Modal for Card 1 -->
 <div id="modal1" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal1')">&times;</span>
-        <h2>Young Vincent</h2>
-        <p>This is the description for Young Vincent.</p>
+    <div class="chat-module">
+        <div class="chat-header">Talk to Vincent van Gogh</div>
+        <div id="chatbox"></div>
+        <div class="chat-input-container">
+            <input type="text" id="userInput" placeholder="Ask Vincent a question...">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
     </div>
 </div>
 
@@ -196,6 +270,24 @@
             }
         });
     }
+    async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) return;  // Skip if input is empty
+
+            // Mock response for demo purposes (remove this when implementing actual API call)
+            const response = { response: "I'm glad to talk to you. Let's discuss art!" };
+
+            // Append user and Vincent's messages to the chatbox
+            document.getElementById("chatbox").innerHTML += `
+                <div class="chat-message user-message"><strong>You:</strong> ${userInput}</div>
+            `;
+            document.getElementById("chatbox").innerHTML += `
+                <div class="chat-message vincent-message"><strong>Vincent:</strong> ${response.response}</div>
+            `;
+
+            document.getElementById("userInput").value = "";  // Clear the input field
+            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;  // Scroll to the bottom
+        }
 </script>
 
 </body>
