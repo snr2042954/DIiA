@@ -1,18 +1,21 @@
 from flask import Flask, request, jsonify, render_template
 from time import sleep
 from openai import OpenAI
+import logging
+import os
 
+logging.basicConfig(level=logging.DEBUG)
 # Initialize OpenAI client with API key from environment variable
 client = OpenAI()
 
 app = Flask(__name__)
 
 # Load personality instructions from a file
-with open("personality.txt", "r") as file:
+with open("DIiA/personality.txt", "r") as file:
     personality = file.read()
 
 # Step 1: Upload a file with an "assistants" purpose
-file_path = "personality.txt"  # Replace with your file
+file_path = "DIiA/personality.txt"  # Replace with your file
 uploaded_file = client.files.create(
     file=open(file_path, "rb"),
     purpose='assistants'
@@ -33,9 +36,13 @@ thread = client.beta.threads.create()
 # Step 4: Outline the html template
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-
+    return render_template('startscreen.html')
+@app.route('/startscreen.html')
+def startscreen():
+    return render_template('startscreen.html')
+@app.route('/early-life.html')
+def early_life():
+    return render_template('early-life.html')
 # Step 5: Implement POST Method
 @app.route('/chat', methods=['POST'])
 def chat():
