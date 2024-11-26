@@ -248,9 +248,9 @@
     <!-- Chat Panel -->
     <div class="panel">
       <h2>Chat with Van Gogh</h2>
-      <div class="chatbox" id="chatbox">
+      <div class="chatbox" id="chatbox" style="max-height: 400px; overflow-y: auto;">
         <div class="chat-bubble">
-          <img src="static\van-gogh-avatar.jpg" alt="Van Gogh Avatar">
+          <img src="static/van-gogh-avatar.jpg" alt="Van Gogh Avatar">
           <p>Ohh this is a tough question! Should I give you a hint?</p>
         </div>
         <div class="chat-bubble user-message">
@@ -259,19 +259,93 @@
       </div>
       <div class="chat-input-container">
         <input type="text" id="userInput" placeholder="Type your message …">
-        <button onclick="sendMessage()">Send</button>
+        <button onclick="sendMessage('userInput')">Send</button>
       </div>
     </div>
   </div>
 
   <script>
     const questions = [
-      "What is the place of birth of Vincent Van Gogh?",
-      "In which year was Vincent Van Gogh born?",
-      "What was the profession of Van Gogh's father?",
-      "Which country is Van Gogh from?",
-      "How many siblings did Van Gogh have?",
-      // Add more questions as needed...
+    {
+      question: "At what age did Van Gogh begin his formal education?",
+      answer: "at the age of 6."
+    },
+    {
+      question: "Which institution did Van Gogh attend for his art training?",
+      answer: "The Royal Academy of Fine Arts in Brussels."
+    },
+    {
+      question: "Who were the primary influences on Van Gogh's early artistic style?",
+      answer: "Artists like Jean-François Millet and the Impressionists."
+    },
+    {
+      question: "What challenges did Van Gogh face during his childhood?",
+      answer: "Financial difficulties and strained family relationships."
+    },
+    {
+      question: "How did Van Gogh's relationship with his family shape his early life?",
+      answer: "Supportive yet conflicted, influencing his emotional well-being."
+    },
+    {
+      question: "What subjects did Van Gogh commonly paint during his early years?",
+      answer: "Landscapes, still lifes, and scenes of rural life."
+    },
+    {
+      question: "Where did Van Gogh live during his adolescence?",
+      answer: "In the Netherlands, particularly in Zundert and The Hague."
+    },
+    {
+      question: "What significant events impacted Van Gogh's early career?",
+      answer: "His decision to pursue art after working in various other professions."
+    },
+    {
+      question: "How did Van Gogh support himself before becoming a painter?",
+      answer: "He worked as a teacher, missionary, and art dealer."
+    },
+    {
+      question: "What was Van Gogh's first major artwork?",
+      answer: "His early landscapes, such as 'The Potato Eaters.'"
+    },
+    {
+      question: "Who were Van Gogh's mentors or role models in his early years?",
+      answer: "Artists like Anton Mauve and Millet."
+    },
+    {
+      question: "What artistic movements influenced Van Gogh's early work?",
+      answer: "Realism and Impressionism."
+    },
+    {
+      question: "How did Van Gogh's early experiences in the Netherlands affect his art?",
+      answer: "They grounded his focus on naturalism and everyday subjects."
+    },
+    {
+      question: "What personal struggles did Van Gogh encounter in his early life?",
+      answer: "Mental health issues and periods of intense loneliness."
+    },
+    {
+      question: "How did Van Gogh transition from his early careers to becoming an artist?",
+      answer: "Through persistent self-education and dedication to painting."
+    },
+    {
+      question: "What were the themes Van Gogh explored in his early paintings?",
+      answer: "Laborers, peasant life, and the hardships of rural existence."
+    },
+    {
+      question: "How did Van Gogh's early travels influence his artistic development?",
+      answer: "Exposure to different landscapes and artistic styles."
+    },
+    {
+      question: "What impact did Van Gogh's early relationships have on his artwork?",
+      answer: "They provided emotional support and artistic inspiration."
+    },
+    {
+      question: "How did Van Gogh's early financial situation affect his art?",
+      answer: "Limited resources led him to use affordable materials and focus on simple subjects."
+    },
+    {
+      question: "What early recognitions or criticisms did Van Gogh receive for his work?",
+      answer: "Limited recognition during his lifetime, with some critiques from peers."
+    }
     ];
     let currentQuestionIndex = -1;
 
@@ -290,7 +364,7 @@
 
     function selectQuestion(index) {
       currentQuestionIndex = index;
-      questionBox.textContent = questions[index] || `Question ${index + 1}`;
+      questionBox.textContent = questions[index].question || `Question ${index + 1}`;
       document.querySelectorAll(".quiz-menu button").forEach(btn => btn.classList.remove("active"));
       quizMenu.children[index].classList.add("active");
       progressBar.style.width = `${((index + 1) / 20) * 100}%`;
@@ -299,16 +373,25 @@
     function submitAnswer() {
       const answer = document.getElementById("answer-input").value.trim();
       if (answer === "") {
-        alert("Please type an answer!");
+        alert("No answer provided. Please enter your answer.");
         return;
       }
-      alert(`Answer submitted for question ${currentQuestionIndex + 1}: ${answer}`);
-      document.getElementById("answer-input").value = "";
+      else if (answer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+      quizMenu.children[currentQuestionIndex].style.backgroundColor = "green";
+      document.getElementById("answer-input").value = "";  // Clear the input field
+      selectQuestion(currentQuestionIndex + 1);
+
+    } else {
+        sendMessage("answer-input");
+        quizMenu.children[currentQuestionIndex].style.backgroundColor = "red";
     }
+  
+    }
+    
     // Initialize quiz menu
     loadQuizMenu();
-        async function sendMessage() {
-            const userInput = document.getElementById("userInput").value;
+        async function sendMessage(input) {
+            const userInput = document.getElementById(input).value;
             if (!userInput.trim()) return;  // Skip if input is empty
 
             const response = await fetch('/chat', {
@@ -320,13 +403,13 @@
 
             // Append user and Vincent's messages to the chatbox
             document.getElementById("chatbox").innerHTML += `
-                <div class="chat-message user-message"><strong>You:</strong> ${userInput}</div>
+                <div class="chat-bubble user-message"><p>${userInput}</p></div>
             `;
             document.getElementById("chatbox").innerHTML += `
-                <div class="chat-message vincent-message"><strong>Vincent:</strong> ${data.response}</div>
+                <div class="chat-bubble vincent-message"><img src="static/van-gogh-avatar.jpg" alt="Van Gogh Avatar"><p>${data.response}</p></div>
             `;
 
-            document.getElementById("userInput").value = "";  // Clear the input field
+            document.getElementById(input).value = "";  // Clear the input field
             document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;  // Scroll to the bottom
         }
   </script>
