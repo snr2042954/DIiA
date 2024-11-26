@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Life and Art of Van Gogh</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5d0db;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .title {
+      margin-bottom: 30px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      gap: 30px;
+    }
+
+    .card {
+      width: 300px; /* Vergrote breedte */
+      height: 450px; /* Vergrote hoogte */
+      border-radius: 20px;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none; /* Verwijder onderstreping bij links */
+      color: inherit; /* Inherit tekstkleur */
+      transition: transform 0.3s ease;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 15px;
+      height: 250px; /* Vergrote afbeelding */
+      object-fit: cover;
+    }
+
+    .card h3 {
+      margin: 15px 0;
+      font-size: 1.5rem; /* Vergrote tekst */
+    }
+
+    .progress-bar {
+      width: 85%; /* Vergrote breedte */
+      height: 12px; /* Vergrote hoogte van de voortgangsbalk */
+      background-color: #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: black;
+    }
+
+    .lock-icon {
+      font-size: 30px; /* Vergroot slot-icoon */
+      color: black;
+    }
+
+    .card.red {
+      background-color: #f8c7cc;
+    }
+
+    .card.green {
+      background-color: #c5e5c5;
+    }
+
+    .card.blue {
+      background-color: #d3e5f8;
+    }
+
+    .card:hover {
+      transform: scale(1.08); /* Lichte vergroting bij hover */
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">The Life and Art of Van Gogh</h1>
+  <div class="container">
+    <!-- Early Life Card -->
+    <a href="early-life.html" class="card red">
+      <img src="static\early-life.png" alt="Early life">
+      <h3>Early life</h3>
+      <div class="progress-bar">
+        <div class="progress" style="width: 30%;"></div>
+      </div>
+      <p>30%</p>
+
+    </a>
+
+    <!-- Art Works Card -->
+    <div class="card green">
+      <img src="static\art-works.jpg" alt="Art works">
+      <h3>Art works</h3>
+      <div class="lock-icon">🔒</div>
+    </div>
+
+    <!-- Last Year Card -->
+    <div class="card blue">
+      <img src="static\last-year.jpg" alt="Last year">
+      <h3>Last year</h3>
+      <div class="lock-icon">🔒</div>
+    </div>
+  </div>
+</body>
+</html>
