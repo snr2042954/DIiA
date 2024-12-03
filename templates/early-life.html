@@ -397,6 +397,7 @@
                 body: JSON.stringify({ message: userInput })
             });
             const data = await response.json();
+            const sources = data.sources;
 
             // Append user and Vincent's messages to the chatbox
             document.getElementById("chatbox").innerHTML += `
@@ -405,7 +406,9 @@
             document.getElementById("chatbox").innerHTML += `
                 <div class="chat-bubble vincent-message"><img src="static/van-gogh-avatar.jpg" alt="Van Gogh Avatar"><p>${data.response}</p></div>
             `;
-
+            document.getElementById("chatbox").innerHTML += `
+                <div class="chat-bubble vincent-message"><p>${sources}</p></div>
+            `;
             document.getElementById(input).value = "";  // Clear the input field
             document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;  // Scroll to the bottom
         }
