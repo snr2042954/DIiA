@@ -56,7 +56,7 @@ def get_or_create_assistant(client, vector_store, personality):
         name=assistant_name,
         instructions=personality,
         tools=[{"type": "file_search"}],
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         tool_resources={"file_search":  {"vector_store_ids":[vector_store.id]}}
     )
     return assistant

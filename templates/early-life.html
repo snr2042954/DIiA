@@ -18,8 +18,36 @@
       flex-direction: column;
       align-items: center;
       height: 100vh;
+      width: 100%;
+    }
+    /* Styles for the Sources Section */
+    .sources-container {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    .sources-container h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    #sources-content {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .sources-content p {
+      margin-bottom: 10px;
+    }
+    .sources-list {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.5;
+    }
     .title {
       background-color: #fff;
       width: 100%;
@@ -243,10 +271,15 @@
         <input type="text" id="answer-input" placeholder="Type your answer …">
         <button onclick="submitAnswer()">Submit</button>
       </div>
+      <!-- Sources Section -->
+      <div class="sources-container">
+        <h2>Sources</h2>
+        <div id="sources-content"></div>
+      </div>
     </div>
 
     <!-- Chat Panel -->
-    <div class="panel">
+    <div class="panel" style="flex: 2.5;">
       <h2>Chat with Van Gogh</h2>
       <div class="chatbox" id="chatbox" style="max-height: 400px; overflow-y: auto;">
         <div class="chat-bubble vincent-message">
@@ -265,7 +298,7 @@
     const questions = [
     {
       question: "At what age did Van Gogh begin his formal education?",
-      answer: "at the age of 6."
+      answer: "6"
     },
     {
       question: "Which institution did Van Gogh attend for his art training?",
@@ -360,12 +393,23 @@
     }
 
     function selectQuestion(index) {
+      document.getElementById('answer-input').value = "";
       currentQuestionIndex = index;
       questionBox.textContent = questions[index].question || `Question ${index + 1}`;
       document.querySelectorAll(".quiz-menu button").forEach(btn => btn.classList.remove("active"));
       quizMenu.children[index].classList.add("active");
       progressBar.style.width = `${((index + 1) / 20) * 100}%`;
     }
+
+    function updateSources(sources) {
+        const sourcesContent = document.getElementById('sources-content');
+        sourcesContent.innerHTML = ''; // Clear previous sources
+        sources.forEach(source => {
+          const sourceElement = document.createElement('p');
+          sourceElement.textContent = source;
+          sourcesContent.appendChild(sourceElement);
+        });
+      }
 
     function submitAnswer() {
       const answer = document.getElementById("answer-input").value.trim();
@@ -379,18 +423,33 @@
       selectQuestion(currentQuestionIndex + 1);
 
     } else {
-        sendMessage("answer-input");
-        quizMenu.children[currentQuestionIndex].style.backgroundColor = "red";
+      sendMessage(`this answer has been provided as an answer to the question but is wrong, thank me for my answer but do not get into this message but rather tell me something about: ${answer} and why this is not correct. also give a nice story about q: ${questions[currentQuestionIndex].question} & a:${questions[currentQuestionIndex].answer} as this is the question and answer also give the answer explicitly, make it a short feedback comment.`);
+      quizMenu.children[currentQuestionIndex].style.backgroundColor = "red";
     }
-  
     }
     
     // Initialize quiz menu
     loadQuizMenu();
         async function sendMessage(input) {
-            const userInput = document.getElementById(input).value;
-            if (!userInput.trim()) return;  // Skip if input is empty
-
+          let userInput;
+              // Check if input is an ID or a direct string
+              if (document.getElementById(input)) {
+                  // Input is an ID, get the value from the element
+                  userInput = document.getElementById(input).value;
+                  document.getElementById("chatbox").innerHTML += `
+                  <div class="chat-bubble user-message"><p>${userInput}</p></div>
+                  `;
+              } else if (typeof input === "string") {
+                  // Input is a direct string value
+                  userInput = input;
+                  answerInput = document.getElementById("answer-input").value;
+                  document.getElementById("chatbox").innerHTML += `
+                  <div class="chat-bubble user-message"><p>${answerInput}</p></div>
+                  `;
+              } else {
+                  console.error("Invalid input: must be an element ID or a string value");
+                  return;
+              }
             const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -400,18 +459,28 @@
             const sources = data.sources;
 
             // Append user and Vincent's messages to the chatbox
+            
             document.getElementById("chatbox").innerHTML += `
-                <div class="chat-bubble user-message"><p>${userInput}</p></div>
+            <div class="chat-bubble vincent-message">
+              <img src="static/van-gogh-avatar.jpg" alt="Van Gogh Avatar">
+              <p>${data.response}</p>
+            </div>
             `;
-            document.getElementById("chatbox").innerHTML += `
-                <div class="chat-bubble vincent-message"><img src="static/van-gogh-avatar.jpg" alt="Van Gogh Avatar"><p>${data.response}</p></div>
-            `;
-            document.getElementById("chatbox").innerHTML += `
-                <div class="chat-bubble vincent-message"><p>${sources}</p></div>
-            `;
-            document.getElementById(input).value = "";  // Clear the input field
-            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;  // Scroll to the bottom
-        }
+            document.getElementById("sources-content").innerHTML +=`
+            <div class="sources-list"<p>${sources}</p>
+            </div>
+            `;  
+
+            // Update the sources section
+          updateSources(sources);
+
+            // Clear the input field and scroll to bottom
+          document.getElementById(input).value = "";
+          document.getElementById('answer-input').value = "";
+          document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+            }
   </script>
 </body>
 </html>
+
+

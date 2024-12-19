@@ -92,6 +92,7 @@ def chat():
                 citations.append(f'[{index}] sourced from: {file.filename}')
             reply.append(msg.content[0].text.value)
     
+    
     # Step 5.7: Format the assistant's reply as a JSON response
     output = jsonify({"response": reply[1], "sources": citations})
 
@@ -102,7 +103,4 @@ def chat():
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
 
-
- 
-    # Step 5.7: Format the assistant's reply and sources as a JSON response
       
